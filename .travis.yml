@@ -1,12 +1,14 @@
 sudo : required
+language: generic
+
 services:
   - docker
 
 before_install:
-  - docker buid -t bogdanarsene/react-test -f ./client/Dockerfile.dev ./client
+  - docker build -t bogdanarsene/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run bogdanarsene/react-test npm test -- --coverage
+  - docker run -e CI=true bogdanarsene/react-test npm test
 
 after_success:
   - docker build -t bogdanarsene/multi-client ./client
@@ -20,3 +22,5 @@ after_success:
   - docker push bogdanarsene/multi-nginx
   - docker push bogdanarsene/multi-server
   - docker push bogdanarsene/multi-worker
+
+
